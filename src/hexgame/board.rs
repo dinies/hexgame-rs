@@ -1,5 +1,6 @@
 use super::cell::Cell;
 use super::cell::Ownership;
+use std::fmt;
 
 /*
  A board is a set of exagonal cells stacked in a 2D matrix shape.
@@ -21,6 +22,12 @@ pub struct Board {
     pub dim_x: usize,
     pub dim_y: usize,
     pub cells: Vec<Vec<Cell>>,
+}
+
+impl Default for Board {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Board {
@@ -49,7 +56,7 @@ impl Board {
     }
 
     pub fn new_from_dim(dim: usize) -> Self {
-        return Board::new_from_dims(dim, dim);
+        Board::new_from_dims(dim, dim)
     }
 
     fn is_empty(&self) -> bool {
@@ -60,10 +67,10 @@ impl Board {
         if self.is_empty() {
             panic!("The board is empty")
         }
-        return !(x < 0
+        !(x < 0
             || y < 0
             || x >= self.dim_x.try_into().unwrap()
-            || y >= self.dim_y.try_into().unwrap());
+            || y >= self.dim_y.try_into().unwrap())
     }
 
     pub fn get_unoccupied_squares(&self) -> Vec<(usize, usize)> {
@@ -96,21 +103,20 @@ impl Board {
                 );
             }
         }
-        return neighbours;
+        neighbours
     }
 
     fn find_next_node_to_visit(visited_nodes: &Vec<Vec<bool>>) -> Option<(usize, usize)> {
         let dim_x: usize = visited_nodes.len();
-        let dim_y;
-        match visited_nodes.get(0) {
-            Some(row) => dim_y = row.len(),
+        let dim_y = match visited_nodes.get(0) {
+            Some(row) => row.len(),
             None => panic!("The board is empty: x dimension is zero"),
-        }
+        };
         if dim_y == 0 {
             panic!("The board is empty: y dimension is zero")
         }
-        for x in 0..dim_x {
-            for y in 0..dim_y {
+        for (x, column) in visited_nodes.iter().enumerate().take(dim_x) {
+            for (y, _) in column.iter().enumerate().take(dim_y) {
                 if !visited_nodes[x][y] {
                     return Some((x, y));
                 }
@@ -209,13 +215,15 @@ impl Board {
     pub fn make_move(&mut self, coords: (usize, usize), owner: Ownership) {
         self.cells[coords.0][coords.1].ownership = owner;
     }
+}
 
-    pub fn to_string(&self) -> String {
+impl fmt::Display for Board {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut result = String::new();
         for _ in 0..self.dim_x * 4 {
             result.push('-');
         }
-        result.push_str("\n");
+        result.push('\n');
         let mut offset = 0;
         for y in (0..self.dim_y).rev() {
             for _ in 0..offset {
@@ -240,15 +248,15 @@ impl Board {
         for _ in 0..self.dim_x * 4 {
             result.push('-');
         }
-        result.push_str("\n");
-        result
+        result.push('\n');
+        write!(f, "{}", result)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::game::board::Board;
-    use crate::game::cell::{Cell, Ownership};
+    use crate::hexgame::board::Board;
+    use crate::hexgame::cell::{Cell, Ownership};
     use rstest::*;
     #[test]
     fn test_board_contructor() {

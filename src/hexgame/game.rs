@@ -21,7 +21,7 @@ impl Agent {
 impl RandomPlay for Agent {
     fn choose_next_move(&self, board: &Board) -> (usize, usize) {
         let possible_moves: Vec<(usize, usize)> = board.get_unoccupied_squares();
-        if possible_moves.len() == 0 {
+        if possible_moves.is_empty() {
             panic!("there are no more possible moves to made on the board, the game should have already ended");
         }
         *possible_moves.choose(&mut thread_rng()).unwrap()
@@ -52,18 +52,14 @@ impl Game {
             let active_agent = current_iteration % 2;
             let selected_move: (usize, usize) =
                 self.agents[active_agent].choose_next_move(&self.board);
-            print!(
-                "Board at iteration {}:\n{}",
-                current_iteration,
-                self.board.to_string()
-            );
+            print!("Board at iteration {}:\n{}", current_iteration, self.board);
             self.board
                 .make_move(selected_move, self.agents[active_agent].identity);
             println!("Selected move: {},{}", selected_move.0, selected_move.1);
             game_ended = self.board.check_winner(self.agents[active_agent].identity);
             if game_ended {
                 println!("The winner is {}", active_agent);
-                print!("Final board:\n{}", self.board.to_string());
+                print!("Final board:\n{}", self.board);
             }
             current_iteration += 1;
         }

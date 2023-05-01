@@ -33,8 +33,8 @@ impl PartialEq for Cell {
 
 #[cfg(test)]
 mod tests {
-    use crate::game::cell::Cell;
-    use crate::game::cell::Ownership;
+    use crate::hexgame::cell::Cell;
+    use crate::hexgame::cell::Ownership;
     #[test]
     fn test_cell_constructor() {
         let c: Cell = Cell::new(0, 1);
@@ -51,9 +51,9 @@ mod tests {
     }
 
     #[test]
-    fn test_equals(){
+    fn test_equals() {
         let c_1: Cell = Cell::new_from_ownership(0, 1, Ownership::Player1);
-        let mut c_2: Cell = Cell::new(0,1);
+        let mut c_2: Cell = Cell::new(0, 1);
         assert_ne!(c_1, c_2);
         c_2.ownership = Ownership::Player1;
         assert_eq!(c_1, c_2);
