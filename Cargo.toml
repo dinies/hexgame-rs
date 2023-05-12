@@ -1,5 +1,5 @@
 [package]
-name = "hexgame-rs"
+name = "hexgame_rs"
 version = "0.1.0"
 edition = "2021"
 
