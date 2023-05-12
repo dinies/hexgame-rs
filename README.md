@@ -1,2 +1,2 @@
-# hexgame-rs
-Implementation of HexGame in Rust 
+# hexgame_rs
+Implementation of HexGame in Rust
