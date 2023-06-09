@@ -2,9 +2,16 @@
 name = "hexgame_rs"
 version = "0.1.0"
 edition = "2021"
+authors = ["Edoardo Ghini <edoardo.ghini@live.it>"]
+description = "Implementation of the game Hex, a discrete full-information strategy game for two players."
+homepage = "https://github.com/dinies/hexgame-rs.githttps://github.com/dinies/hexgame-rs.git"
+repository = "https://github.com/dinies/hexgame-rs.githttps://github.com/dinies/hexgame-rs.git"
+license = "MIT"
+keywords = ["hex", "game_engine"]
+categories = ["game-dev", "reinforcement-learning"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rstest = "*"
-rand = "*"
+rstest = "0.17.0"
+rand = "0.8.5"
