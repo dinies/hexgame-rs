@@ -149,6 +149,8 @@ impl Board {
         connected_components
     }
 
+
+
     fn expand_component_rec(
         &self,
         component_nodes: &mut Vec<Cell>,
@@ -215,6 +217,16 @@ impl Board {
     pub fn make_move(&mut self, coords: (usize, usize), owner: Ownership) {
         self.cells[coords.0][coords.1].ownership = owner;
     }
+
+    fn encode(self, coords: (usize, usize))-> Option<usize>{
+        //TODO
+        Some(usize::MAX)
+    }
+
+    fn decode(self, id: usize )-> Option<(usize, usize)>{
+        //TODO
+       Some( (usize::MAX,usize::MAX) )
+    }
 }
 
 impl fmt::Display for Board {
@@ -279,6 +291,27 @@ mod tests {
         assert!(empty_board.is_empty());
         assert!(!small_board.is_empty());
     }
+
+    //TODO
+    #[test]
+    fn test_encode_actions() {
+        let small_board: Board = Board::new_from_dim(2);
+        let coords_1 = (0, 0);
+        let coords_2 = (1, 1);
+        let coords_3 = (30, 30);
+        assert!(small_board.encode(coords_1).unwrap() == 0)
+    }
+
+    //TODO
+    #[test]
+    fn test_decode_actions() {
+        let small_board: Board = Board::new_from_dim(2);
+        let id_1 = 0;
+        let id_2 = 4; //??
+        let id_3 = 30; // ?return some
+        assert!( small_board.decode(id_1).unwrap() == (0, 0) )
+    }
+
 
     #[test]
     #[should_panic]
