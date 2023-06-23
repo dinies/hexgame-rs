@@ -218,14 +218,50 @@ impl Board {
         self.cells[coords.0][coords.1].ownership = owner;
     }
 
-    fn encode(self, coords: (usize, usize))-> Option<usize>{
-        //TODO
-        Some(usize::MAX)
+    fn encode(&self, coords: (usize, usize))-> Option<usize>{
+        //
+        // It encodes a coordinate touple into a single integer
+        // so that it can be treated in a general way as RL System
+        // 
+        // To explain the mapping we want this 3x4 table:
+        // 
+        // 00 01 02 03
+        // 10 11 12 13
+        // 20 21 22 23
+        //
+        // 
+        // to be mapped to the following:
+        //
+        // 0  1  2  3
+        // 4  5  6  7
+        // 8  9 10 11
+        // 
+        // Then it's easy to spot the formula,
+        // i.e. 7 = 3 + 4
+        //        = 3 + 1*4
+        //        = (3) + 1*4
+        //        = (coords.1)+coords.0*self.dimy
+        //
+
+        if !self.is_valid_square(coords.0.try_into().unwrap(), coords.1.try_into().unwrap()){
+            None
+        }else{
+
+            Some((coords.1)+coords.0*self.dim_y)
+        }
+        
     }
 
-    fn decode(self, id: usize )-> Option<(usize, usize)>{
-        //TODO
-       Some( (usize::MAX,usize::MAX) )
+    fn decode(&self, id: usize )-> Option<(usize, usize)>{
+        // To decode back we do integer division
+        if  id > (self.dim_x*self.dim_y-1){
+            None
+        }else{
+            let first_coord = id / self.dim_y;
+            let second_coord = id % self.dim_y;
+            Some((first_coord,second_coord) )
+        }
+       
     }
 }
 
@@ -299,7 +335,9 @@ mod tests {
         let coords_1 = (0, 0);
         let coords_2 = (1, 1);
         let coords_3 = (30, 30);
-        assert!(small_board.encode(coords_1).unwrap() == 0)
+        assert!(small_board.encode(coords_1).unwrap() == 0);
+        assert!(small_board.encode(coords_2).unwrap() == 3);
+        assert!(small_board.encode(coords_3) == None)
     }
 
     //TODO
@@ -309,7 +347,9 @@ mod tests {
         let id_1 = 0;
         let id_2 = 4; //??
         let id_3 = 30; // ?return some
-        assert!( small_board.decode(id_1).unwrap() == (0, 0) )
+        assert!( small_board.decode(id_1).unwrap() == (0, 0) );
+        assert!( small_board.decode(id_2).unwrap() == (1, 1) );
+        //assert!( small_board.decode(id_3).unwrap() == (0, 0) );
     }
 
 
