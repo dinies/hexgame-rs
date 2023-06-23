@@ -351,7 +351,14 @@ mod tests {
         assert!( small_board.decode(id_3) == None );
     }
 
-    
+    #[test]
+    fn test_encode_decode(){
+        let medium_board: Board = Board::new_from_dim(5);
+        assert!(medium_board.decode(medium_board.encode((0,1)).unwrap()).unwrap() == (0,1));
+        assert!(medium_board.decode(medium_board.encode((2,1)).unwrap()).unwrap() == (2,1));
+        assert!(medium_board.decode(medium_board.encode((3,2)).unwrap()).unwrap() == (3,2));    
+    }
+
 
 
     #[test]
