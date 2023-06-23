@@ -257,9 +257,8 @@ impl Board {
         if  id > (self.dim_x*self.dim_y-1){
             None
         }else{
-            let first_coord = id / self.dim_y;
-            let second_coord = id % self.dim_y;
-            Some((first_coord,second_coord) )
+
+            Some((id / self.dim_y,id % self.dim_y) )
         }
        
     }
@@ -348,9 +347,11 @@ mod tests {
         let id_2 = 4; //??
         let id_3 = 30; // ?return some
         assert!( small_board.decode(id_1).unwrap() == (0, 0) );
-        assert!( small_board.decode(id_2).unwrap() == (1, 1) );
-        //assert!( small_board.decode(id_3).unwrap() == (0, 0) );
+        assert!( small_board.decode(id_2) == None );
+        assert!( small_board.decode(id_3) == None );
     }
+
+    
 
 
     #[test]
