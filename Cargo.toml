@@ -1,6 +1,6 @@
 [package]
 name = "hexgame_rs"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["Edoardo Ghini <edoardo.ghini@live.it>"]
 description = "Implementation of the game Hex, a discrete full-information strategy game for two players."
