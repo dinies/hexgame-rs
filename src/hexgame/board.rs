@@ -1,3 +1,4 @@
+#![allow(unused)]
 use super::cell::Cell;
 use super::cell::Ownership;
 use std::fmt;
@@ -215,6 +216,47 @@ impl Board {
     pub fn make_move(&mut self, coords: (usize, usize), owner: Ownership) {
         self.cells[coords.0][coords.1].ownership = owner;
     }
+
+    fn encode(&self, coords: (usize, usize)) -> Option<usize> {
+        //
+        // It encodes a coordinate touple into a single integer
+        // so that it can be treated in a general way as RL System
+        //
+        // To explain the mapping we want this 3x4 table:
+        //
+        // 00 01 02 03
+        // 10 11 12 13
+        // 20 21 22 23
+        //
+        //
+        // to be mapped to the following:
+        //
+        // 0  1  2  3
+        // 4  5  6  7
+        // 8  9 10 11
+        //
+        // Then it's easy to spot the formula,
+        // i.e. 7 = 3 + 4
+        //        = 3 + 1*4
+        //        = (3) + 1*4
+        //        = (coords.1)+coords.0*self.dimy
+        //
+
+        if !self.is_valid_square(coords.0.try_into().unwrap(), coords.1.try_into().unwrap()) {
+            None
+        } else {
+            Some((coords.1) + coords.0 * self.dim_y)
+        }
+    }
+
+    fn decode(&self, id: usize) -> Option<(usize, usize)> {
+        // To decode back we do integer division
+        if id > (self.dim_x * self.dim_y - 1) {
+            None
+        } else {
+            Some((id / self.dim_y, id % self.dim_y))
+        }
+    }
 }
 
 impl fmt::Display for Board {
@@ -278,6 +320,53 @@ mod tests {
         let small_board: Board = Board::new_from_dim(1);
         assert!(empty_board.is_empty());
         assert!(!small_board.is_empty());
+    }
+
+    //TODO
+    #[test]
+    fn test_encode_actions() {
+        let small_board: Board = Board::new_from_dim(2);
+        let coords_1 = (0, 0);
+        let coords_2 = (1, 1);
+        let coords_3 = (30, 30);
+        assert!(small_board.encode(coords_1).unwrap() == 0);
+        assert!(small_board.encode(coords_2).unwrap() == 3);
+        assert!(small_board.encode(coords_3) == None)
+    }
+
+    //TODO
+    #[test]
+    fn test_decode_actions() {
+        let small_board: Board = Board::new_from_dim(2);
+        let id_1 = 0;
+        let id_2 = 4; //??
+        let id_3 = 30; // ?return some
+        assert!(small_board.decode(id_1).unwrap() == (0, 0));
+        assert!(small_board.decode(id_2) == None);
+        assert!(small_board.decode(id_3) == None);
+    }
+
+    #[test]
+    fn test_encode_decode() {
+        let medium_board: Board = Board::new_from_dim(5);
+        assert!(
+            medium_board
+                .decode(medium_board.encode((0, 1)).unwrap())
+                .unwrap()
+                == (0, 1)
+        );
+        assert!(
+            medium_board
+                .decode(medium_board.encode((2, 1)).unwrap())
+                .unwrap()
+                == (2, 1)
+        );
+        assert!(
+            medium_board
+                .decode(medium_board.encode((3, 2)).unwrap())
+                .unwrap()
+                == (3, 2)
+        );
     }
 
     #[test]
