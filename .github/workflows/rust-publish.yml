@@ -1,0 +1,22 @@
+    name: Publish rust crate on crates.io
+
+    on:
+      pull_request:
+        types: [closed]
+
+    jobs:
+      deploy:
+        if: github.event.pull_request.merged == true &&
+          contains(github.event.issue.labels.*.name, 'release')
+
+        runs-on: ubuntu-latest
+
+        steps:
+          - uses: actions/checkout@v3
+          - uses: actions-rs/toolchain@v1
+            with:
+                toolchain: stable
+                override: true
+          - uses: katyo/publish-crates@v2
+            with:
+                registry-token: ${{ secrets.CARGO_REGISTRY_TOKEN }}
