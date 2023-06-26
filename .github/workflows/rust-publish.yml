@@ -2,13 +2,14 @@
 
     on:
       pull_request:
-        types: [closed]
-
+        types:
+          - closed
+        branch:
+          - main
+        labels:
+          - 'release'
     jobs:
-      deploy:
-        if: github.event.pull_request.merged == true &&
-          contains(github.event.issue.labels.*.name, 'release')
-
+      after_merge:
         runs-on: ubuntu-latest
 
         steps:
