@@ -217,7 +217,7 @@ impl Board {
         self.cells[coords.0][coords.1].ownership = owner;
     }
 
-    fn encode(&self, coords: (usize, usize)) -> Option<usize> {
+    pub fn encode(&self, coords: (usize, usize)) -> Option<usize> {
         //
         // It encodes a coordinate touple into a single integer
         // so that it can be treated in a general way as RL System
@@ -249,7 +249,7 @@ impl Board {
         }
     }
 
-    fn decode(&self, id: usize) -> Option<(usize, usize)> {
+    pub fn decode(&self, id: usize) -> Option<(usize, usize)> {
         // To decode back we do integer division
         if id > (self.dim_x * self.dim_y - 1) {
             None
